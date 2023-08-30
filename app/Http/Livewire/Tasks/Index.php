@@ -6,7 +6,6 @@ use App\Models\Task;
 use Closure;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\WithPagination;
 
 class Index extends Component
@@ -15,11 +14,13 @@ class Index extends Component
 
     protected $listeners = ['update'];
 
+    protected $queryString = ['search', 'doneStatus'];
+
     public string $todo;
-    public $confirmingDeleteTask = false;
+    public bool $confirmingDeleteTask = false;
     public Task $taskToDelete;
 
-    public array $tasksGlobal;
+    public string $search = '', $doneStatus = '';
 
     protected $rules = [
         'todo' => 'required|string|max:200',
@@ -27,10 +28,23 @@ class Index extends Component
 
     public function render(): View|Closure|string
     {
-        $tasks = Task::orderByDesc('id')->paginate(10);
-        $alertDeleteTask = $this->confirmingDeleteTask;
+        $tasks = Task::orderByDesc('id');
 
-        $this->tasksGlobal = Task::orderByDesc('id')->paginate(10)->toArray();
+        if ($this->search) {
+            $tasks->where('todo', 'like', '%'.$this->search.'%');
+        }
+
+        switch ($this->doneStatus) {
+            case 'completed':
+                $tasks->where('done', '1');
+                break;
+            case 'uncompleted':
+                $tasks->where('done', '0');
+                break;
+        }
+
+        $tasks = $tasks->paginate(10);
+        $alertDeleteTask = $this->confirmingDeleteTask;
 
         return view('livewire.tasks.index', compact('tasks', 'alertDeleteTask'));
     }
@@ -53,13 +67,14 @@ class Index extends Component
             $task->update([
                 'done' => 0,
             ]);
+            $this->emit('uncompleted');
         } else {
             $task->update([
                 'done' => 1,
             ]);
+            $this->emit('completed');
         }
 
-        $this->emit('completed');
     }
 
     public function update(int $taskId, string $updateTodo): void

@@ -5,8 +5,14 @@
     <x-small-alert on="completed" class="bg-green-200 rounded-md w-max px-5 py-2">
         Completada exitosamente
     </x-small-alert>
+    <x-small-alert on="uncompleted" class="bg-yellow-200 rounded-md w-max px-5 py-2">
+        Pendiente nuevamente
+    </x-small-alert>
     <x-small-alert on="updated" class="bg-green-200 rounded-md w-max px-5 py-2">
         Tarea editada exitosamente
+    </x-small-alert>
+    <x-small-alert on="deleted" class="bg-red-200 rounded-md w-max px-5 py-2">
+        Tarea eliminada exitosamente
     </x-small-alert>
 
     @if ($alertDeleteTask)
@@ -33,7 +39,7 @@
         </x-modal>
     @endif
 
-    <form wire:submit.prevent="submit" class="w-full">
+    <form wire:submit.prevent="submit" class="w-full border rounded-lg p-5">
         <x-error-message for="todo"/>
         <div class="grid grid-cols-4 gap-4 w-full">
             <div class="col-span-3">
@@ -54,6 +60,36 @@
             </div>
         </div>
     </form>
+    <div class="relative w-full border rounded-lg p-5">
+        <label class="absolute translate-x-7 -translate-y-8 bg-white w-min px-3 text-gray-600 text-lg">
+            Filtros
+        </label>
+        <div class="grid grid-cols-2 gap-5">
+            <div class="col-span-1">
+                <input
+                    wire:model="search"
+                    type="text"
+                    class="border border-gray-500 rounded-md h-full px-5 py-2 placeholder:italic w-full"
+                    placeholder="Buscar"
+                />
+            </div>
+            <div class="col-span-1">
+                <div class="relative rounded-md border p-1 col-span-1">
+                    <label class="absolute translate-x-7 -translate-y-3 bg-white w-min px-3 text-gray-600 text-sm">
+                        Estado
+                    </label>
+                    <select
+                        wire:model="doneStatus"
+                        class="border border-gray-500 rounded-md px-5 py-2 placeholder:italic w-full"
+                    >
+                        <option value="">Seleccionar...</option>
+                        <option value="completed">Completadas</option>
+                        <option value="uncompleted">Pendientes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
     <table class="w-full">
         <thead>
             <tr>
