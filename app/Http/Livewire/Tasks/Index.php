@@ -26,6 +26,16 @@ class Index extends Component
         'todo' => 'required|string|max:200',
     ];
 
+    public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingDoneStatus(): void
+    {
+        $this->resetPage();
+    }
+
     public function render(): View|Closure|string
     {
         $tasks = Task::orderByDesc('id');
