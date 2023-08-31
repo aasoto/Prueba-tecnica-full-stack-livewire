@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('todo', 200);
+            $table->string('todo', 200)->unique();
             $table->boolean('done')->default(false);
             $table->timestamps();
         });

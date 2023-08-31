@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Tasks;
 
 use App\Models\Task;
-use Closure;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Livewire\WithPagination;
@@ -23,7 +22,7 @@ class Index extends Component
     public string $search = '', $doneStatus = '';
 
     protected $rules = [
-        'todo' => 'required|string|max:200',
+        'todo' => 'required|unique:tasks|string|max:200',
     ];
 
     public function updatingSearch(): void
@@ -38,10 +37,12 @@ class Index extends Component
 
     public function updatingTodo(): void
     {
+        $this->search = '';
+        $this->doneStatus = '';
         $this->resetPage();
     }
 
-    public function render(): View|Closure|string
+    public function render(): View
     {
         $tasks = Task::orderByDesc('id');
 
@@ -89,16 +90,21 @@ class Index extends Component
             ]);
             $this->emit('completed');
         }
-
     }
 
-    public function update(int $taskId, string $updateTodo): void
+    public function update(int $taskId, string $todo): void
     {
-        if ($updateTodo == '') return;
+        if ($todo == '') return;
+
+        $this->todo = $todo;
+
+        $this->validate();
 
         Task::where('id', $taskId)->update([
-            'todo' => $updateTodo,
+            'todo' => $this->todo,
         ]);
+
+        $this->todo = '';
 
         $this->emit('updated');
     }

@@ -132,22 +132,13 @@
                             </template>
                         </td>
                         <td class="capitalize pl-4 py-2 text-center">
-                            @if ($task->done)
-                                <input
-                                    checked
-                                    type="checkbox"
-                                    value=""
-                                    wire:click="completed({{$task}})"
-                                    class="w-6 h-6 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                >
-                            @else
-                                <input
-                                    type="checkbox"
-                                    value=""
-                                    wire:click="completed({{$task}})"
-                                    class="w-6 h-6 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                >
-                            @endif
+                            <input
+                                :checked="{{ $task->done }}"
+                                type="checkbox"
+                                value=""
+                                wire:click="completed({{$task}})"
+                                class="w-6 h-6 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            >
                         </td>
                         <td class="capitalize pl-4 py-2 flex justify-center items-center">
                             <button wire:click="selectedTaskToDelete({{ $task }})" class="bg-red-500 hover:bg-red-600 text-white font-bold p-2 rounded-md shadow-sm hover:shadow scale-100 hover:scale-105 transition duration-200">
