@@ -36,6 +36,11 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function updatingTodo(): void
+    {
+        $this->resetPage();
+    }
+
     public function render(): View|Closure|string
     {
         $tasks = Task::orderByDesc('id');
